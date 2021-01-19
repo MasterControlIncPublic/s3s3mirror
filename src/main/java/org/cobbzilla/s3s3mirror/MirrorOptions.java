@@ -58,7 +58,13 @@ public class MirrorOptions implements AWSCredentials {
     public static final String LONGOPT_ENCRYPT = "--server-side-encryption";
     @Option(name=OPT_ENCRYPT, aliases=LONGOPT_ENCRYPT, usage=USAGE_ENCRYPT)
     @Getter @Setter private boolean encrypt = false;
-    
+
+    public static final String USAGE_EXCLUSION = "Specify an exclusion filter which will be skipped during the copy";
+    public static final String OPT_EXCLUSION = "-ex";
+    public static final String LONGOPT_EXCLUSION = "--exclusion";
+    @Option(name=OPT_EXCLUSION, aliases=LONGOPT_EXCLUSION, usage=USAGE_EXCLUSION)
+    @Getter @Setter private String excludeFilter = "";
+
     public static final String USAGE_STORAGE_CLASS = "Specify the S3 StorageClass (Standard | ReducedRedundancy)";
     public static final String OPT_STORAGE_CLASS = "-l";
     public static final String LONGOPT_STORAGE_CLASS = "--storage-class";

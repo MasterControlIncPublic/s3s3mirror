@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class KeyLister implements Runnable {
@@ -36,7 +37,8 @@ public class KeyLister implements Runnable {
         final ListObjectsRequest request = new ListObjectsRequest(bucket, prefix, null, null, fetchSize);
         listing = s3getFirstBatch(client, request);
         synchronized (summaries) {
-            final List<S3ObjectSummary> objectSummaries = listing.getObjectSummaries();
+            final List<S3ObjectSummary> objectSummaries = getSummariesFromListing(listing);
+
             summaries.addAll(objectSummaries);
             context.getStats().objectsRead.addAndGet(objectSummaries.size());
             if (options.isVerbose()) log.info("added initial set of "+objectSummaries.size()+" keys");
@@ -56,7 +58,8 @@ public class KeyLister implements Runnable {
                         listing = s3getNextBatch();
                         if (++counter % 100 == 0) context.getStats().logStats();
                         synchronized (summaries) {
-                            final List<S3ObjectSummary> objectSummaries = listing.getObjectSummaries();
+                            final List<S3ObjectSummary> objectSummaries = getSummariesFromListing(listing);
+
                             summaries.addAll(objectSummaries);
                             context.getStats().objectsRead.addAndGet(objectSummaries.size());
                             if (verbose) log.info("queued next set of "+objectSummaries.size()+" keys (total now="+getSize()+")");
@@ -81,6 +84,20 @@ public class KeyLister implements Runnable {
             if (verbose) log.info("KeyLister run loop finished");
             done.set(true);
         }
+    }
+
+    private List<S3ObjectSummary> getSummariesFromListing(ObjectListing listing) {
+        List<S3ObjectSummary> objectSummaries;
+        if (context.getOptions().getExcludeFilter().length() == 0) {
+            objectSummaries = listing.getObjectSummaries();
+        } else {
+            objectSummaries = listing.getObjectSummaries()
+                                     .stream()
+                                     .filter(summary -> !summary.getKey().startsWith(context.getOptions().getExcludeFilter()))
+                                     .collect(Collectors.toList());
+        }
+
+        return objectSummaries;
     }
 
     private ObjectListing s3getFirstBatch(AmazonS3Client client, ListObjectsRequest request) {
