@@ -88,12 +88,12 @@ public class KeyLister implements Runnable {
 
     private List<S3ObjectSummary> getSummariesFromListing(ObjectListing listing) {
         List<S3ObjectSummary> objectSummaries;
-        if (context.getOptions().getExcludeFilter().length() == 0) {
+        if (context.getOptions().getExcludePrefix().length() == 0) {
             objectSummaries = listing.getObjectSummaries();
         } else {
             objectSummaries = listing.getObjectSummaries()
                                      .stream()
-                                     .filter(summary -> !summary.getKey().startsWith(context.getOptions().getExcludeFilter()))
+                                     .filter(summary -> !summary.getKey().startsWith(context.getOptions().getExcludePrefix()))
                                      .collect(Collectors.toList());
         }
 

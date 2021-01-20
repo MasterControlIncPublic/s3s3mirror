@@ -93,7 +93,7 @@ public class KeyListerTest {
 
         Owner owner = new Owner();
         MirrorOptions options = new MirrorOptions();
-        options.setExcludeFilter(exclusionFilter);
+        options.setExcludePrefix(exclusionFilter);
         MirrorContext context = new MirrorContext(options, owner);
 
         return new KeyLister(client, context, PREFIXES.length * COUNT_PER_PREFIX * 2, "testbucket", "");
