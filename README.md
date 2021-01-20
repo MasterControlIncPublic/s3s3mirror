@@ -64,36 +64,37 @@ I encourage you to port them to the 2.x branch, if you have the ability.
 
 ### Options
 
-    -c (--ctime) N           : Only copy objects whose Last-Modified date is younger than this many days
+    -c  (--ctime) N            : Only copy objects whose Last-Modified date is younger than this many days
                                For other time units, use these suffixes: y (years), M (months), d (days), w (weeks),
                                                                          h (hours), m (minutes), s (seconds)
-    -i (--iam) : Attempt to use IAM Role if invoked on an EC2 instance
-    -P (--profile) VAL        : Use a specific profile from your credential file (~/.aws/config)
-    -m (--max-connections) N  : Maximum number of connections to S3 (default 100)
-    -n (--dry-run)            : Do not actually do anything, but show what would be done (default false)
-    -r (--max-retries) N      : Maximum number of retries for S3 requests (default 5)
-    -p (--prefix) VAL         : Only copy objects whose keys start with this prefix
-    -d (--dest-prefix) VAL    : Destination prefix (replacing the one specified in --prefix, if any)
-    -e (--endpoint) VAL       : AWS endpoint to use (or set AWS_ENDPOINT in your environment)
-    -X (--delete-removed)     : Delete objects from the destination bucket if they do not exist in the source bucket
-    -t (--max-threads) N      : Maximum number of threads (default 100)
-    -v (--verbose)            : Verbose output (default false)
-    -z (--proxy) VAL          : host:port of proxy server to use.
-                                Defaults to proxy_host and proxy_port defined in ~/.s3cfg,
-                                or no proxy if these values are not found in ~/.s3cfg
-    -u (--upload-part-size) N : The upload size (in bytes) of each part uploaded as part of a multipart request
-                                for files that are greater than the max allowed file size of 5368709120 bytes (5 GB)
-                                Defaults to 4294967296 bytes (4 GB)
-    -C (--cross-account-copy) : Copy across AWS accounts. Only Resource-based policies are supported (as
-                                specified by AWS documentation) for cross account copying
-                                Default is false (copying within same account, preserving ACLs across copies)
-                                If this option is active, the owner of the destination bucket will receive full control
+    -i  (--iam) : Attempt to use IAM Role if invoked on an EC2 instance
+    -P  (--profile) VAL        : Use a specific profile from your credential file (~/.aws/config)
+    -m  (--max-connections) N  : Maximum number of connections to S3 (default 100)
+    -n  (--dry-run)            : Do not actually do anything, but show what would be done (default false)
+    -r  (--max-retries) N      : Maximum number of retries for S3 requests (default 5)
+    -p  (--prefix) VAL         : Only copy objects whose keys start with this prefix
+    -ex (--exclude) VAL        : Excludes objects from copy that begin with the given prefix.
+    -d  (--dest-prefix) VAL    : Destination prefix (replacing the one specified in --prefix, if any)
+    -e  (--endpoint) VAL       : AWS endpoint to use (or set AWS_ENDPOINT in your environment)
+    -X  (--delete-removed)     : Delete objects from the destination bucket if they do not exist in the source bucket
+    -t  (--max-threads) N      : Maximum number of threads (default 100)
+    -v  (--verbose)            : Verbose output (default false)
+    -z  (--proxy) VAL          : host:port of proxy server to use.
+                                 Defaults to proxy_host and proxy_port defined in ~/.s3cfg,
+                                 or no proxy if these values are not found in ~/.s3cfg
+    -u  (--upload-part-size) N : The upload size (in bytes) of each part uploaded as part of a multipart request
+                                 for files that are greater than the max allowed file size of 5368709120 bytes (5 GB)
+                                 Defaults to 4294967296 bytes (4 GB)
+    -C  (--cross-account-copy) : Copy across AWS accounts. Only Resource-based policies are supported (as
+                                 specified by AWS documentation) for cross account copying
+                                 Default is false (copying within same account, preserving ACLs across copies)
+                                 If this option is active, the owner of the destination bucket will receive full control
                                 
-    -s (--ssl)                    : Use SSL for all S3 api operations (default false)
-    -E (--server-side-encryption) : Enable AWS managed server-side encryption (default false)
-    -l (--storage-class)		  : S3 storage class "Standard" or "ReducedRedundancy" (default Standard)
-    -S (--size-only)              : Only takes size of objects in consideration when determining if a copy is required.
-    -L (--size-and-last-modified) : Uses size and last modified to determine if files have change like the AWS CLI and ignores etags. If -S (--size-only) is also specified that strategy is selected over this strategy.
+    -s  (--ssl)                    : Use SSL for all S3 api operations (default false)
+    -E  (--server-side-encryption) : Enable AWS managed server-side encryption (default false)
+    -l  (--storage-class)		   : S3 storage class "Standard" or "ReducedRedundancy" (default Standard)
+    -S  (--size-only)              : Only takes size of objects in consideration when determining if a copy is required.
+    -L  (--size-and-last-modified) : Uses size and last modified to determine if files have change like the AWS CLI and ignores etags. If -S (--size-only) is also specified that strategy is selected over this strategy.
 
 
 ### Examples
