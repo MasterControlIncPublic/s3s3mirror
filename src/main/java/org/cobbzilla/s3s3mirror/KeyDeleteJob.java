@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import org.cobbzilla.s3s3mirror.stats.MirrorStats;
 import org.cobbzilla.s3s3mirror.comparisonstrategies.strategies.NoImplementationComparisonStrategy;
 import org.cobbzilla.s3s3mirror.store.FileSummary;
+import org.cobbzilla.s3s3mirror.store.s3.job.S3KeyDeleteJob;
 
 public abstract class KeyDeleteJob extends KeyCopyJob {
 
@@ -11,12 +12,16 @@ public abstract class KeyDeleteJob extends KeyCopyJob {
 
     public KeyDeleteJob(AmazonS3Client client, MirrorContext context, FileSummary summary, Object notifyLock) {
         super(client, context, summary, notifyLock, new NoImplementationComparisonStrategy());
-
+        System.out.println("KeyDeleteJob: " + summary.getKey());
         final MirrorOptions options = context.getOptions();
         keysrc = summary.getKey(); // NOTE: summary.getKey is the key in the destination bucket
         if (options.hasPrefix()) {
+            System.out.println("Entering hasprefix section");
+            System.out.println("Prefix: " + options.getDestPrefix());
+            System.out.println("PrefixLength: " + options.getDestPrefixLength());
             keysrc = keysrc.substring(options.getDestPrefixLength());
             keysrc = options.getPrefix() + keyDestination;
+            System.out.println("New key: " + keysrc);
         }
     }
 

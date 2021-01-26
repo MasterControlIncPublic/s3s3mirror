@@ -16,6 +16,7 @@ public class S3DeleteMaster extends S3Master {
     }
 
     @Override protected KeyDeleteJob getTask(FileSummary summary) {
+        System.out.println("S3DeleteMaster: " + summary.getKey());
         return new S3KeyDeleteJob(s3client, context, summary, notifyLock);
     }
 
