@@ -31,7 +31,7 @@ public class KeyLister implements Runnable {
         final MirrorOptions options = context.getOptions();
         int fetchSize = options.getMaxThreads();
         this.summaries = new ArrayList<FileSummary>(10*fetchSize);
-
+        System.out.println(bucket + " - [" + prefix + "] - " + fetchSize);
         final ListRequest request = new ListRequest(bucket, prefix, fetchSize);
         listing = getFirstBatch(store, request);
         synchronized (summaries) {
