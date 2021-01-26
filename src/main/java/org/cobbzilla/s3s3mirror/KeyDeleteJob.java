@@ -20,6 +20,7 @@ public abstract class KeyDeleteJob extends KeyCopyJob {
             System.out.println("Prefix: " + options.getDestPrefix());
             System.out.println("PrefixLength: " + options.getDestPrefixLength());
             keysrc = keysrc.substring(options.getDestPrefixLength());
+            System.out.println("Stripped: " + keysrc);
             keysrc = options.getPrefix() + keyDestination;
             System.out.println("New key: " + keysrc);
         }
