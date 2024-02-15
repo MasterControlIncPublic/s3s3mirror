@@ -64,21 +64,21 @@ public class BucketAndPrefixTest {
     }
 
     public String[][] FILE_TESTS = new String[][] {
-            { "./", null, "@rel/", null },
-            { "./", "", "@rel/", null },
+            { "./", null, "@rel" + File.separator, null },
+            { "./", "", "@rel" + File.separator, null },
 
-            { "./path1", null, "@rel/path1/", null },
-            { "./path1", "path2", "@rel/path1/", "path2" },
+            { "./path1", null, "@rel"+ File.separator + "path1" + File.separator, null },
+            { "./path1", "path2", "@rel" + File.separator + "path1" + File.separator, "path2" },
 
-            { "./path1/foo", null, "@rel/path1/", "foo" },
-            { "./path1/foo", "path2", "@rel/path1/", "foo/path2" },
+            { "./path1/foo", null, "@rel" + File.separator + "path1" + File.separator, "foo" },
+            { "./path1/foo", "path2", "@rel" + File.separator + "path1" + File.separator, "foo" + File.separator + "path2" },
 
-            { "@root/path1/path2", null, "@root/path1/path2/", null },
-            { "@root/path1/path2", "", "@root/path1/path2/", null },
+            { "@root/path1/path2", null, "@root" + File.separator + "path1" + File.separator + "path2" + File.separator, null },
+            { "@root/path1/path2", "", "@root" + File.separator + "path1" + File.separator + "path2" + File.separator, null },
 
-            { "@root/path1", "path2", "@root/path1/", "path2" },
-            { "@root/path1/foo", "path2", "@root/path1/", "foo/path2" },
-            { "@root/path1", "path2/foo", "@root/path1/", "path2/foo" },
+            { "@root/path1", "path2", "@root" + File.separator + "path1" + File.separator, "path2" },
+            { "@root/path1/foo", "path2", "@root" + File.separator + "path1" + File.separator, "foo" + File.separator + "path2" },
+            { "@root/path1", "path2/foo", "@root" + File.separator + "path1" + File.separator, "path2" + File.separator + "foo" },
     };
 
     public String[] TEST_DIRS = new String[] {
@@ -91,12 +91,19 @@ public class BucketAndPrefixTest {
         for (String test[] : FILE_TESTS) {
             bucketAndPrefix = new BucketAndPrefix(replace(test[0]), test[1]);
             assertEquals(replace(test[2]), bucketAndPrefix.bucket);
-            assertEquals(test[3], bucketAndPrefix.prefix);
+            assertEquals(normalizeSlash(test[3]), normalizeSlash(bucketAndPrefix.prefix));
         }
     }
 
+    private String normalizeSlash(String path) {
+        if (path == null) {
+             return null;
+        }
+        return path.replace("\\", File.separator).replace("/", File.separator);
+    }
+
     private String replace(String s) {
-        return s.replace("@root", rootDir.getAbsolutePath()).replace("@rel", relativeDir.getAbsolutePath());
+        return s.replace("@root", rootDir.getAbsolutePath()).replace("@rel", relativeDir.getAbsolutePath()).replace("\\", File.separator).replace("/", File.separator);
     }
 
 }
