@@ -60,7 +60,7 @@ public class S3CopyToLocalJob extends LocalKeyCopyJob {
         final ObjectMetadata objectMetadata = object.getObjectMetadata();
         final Map<String, String> userMeta = objectMetadata.getUserMetadata();
         if (userMeta == null || !userMeta.containsKey(S3S3_SHA256)) {
-            final Map<String, String> meta = userMeta == null ? new HashMap<String, String>() : userMeta;
+            final Map<String, String> meta = userMeta == null ? new HashMap<>() : userMeta;
             meta.putAll(Sha256.userMetaWithHash(destFile));
             final CopyObjectRequest updateMeta = new CopyObjectRequest(
                     options.getSourceBucket(), key,
