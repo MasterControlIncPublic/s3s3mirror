@@ -8,11 +8,13 @@ import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider;
 import org.kohsuke.args4j.CmdLineParser;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.security.Security;
 
 /**
  * Provides the "main" method. Responsible for parsing options, building the context,
@@ -39,6 +41,7 @@ public class MirrorMain {
     public MirrorMain(String[] args) { this.args = args; }
 
     public static void main (String[] args) {
+        Security.addProvider(new BouncyCastleFipsProvider());
         MirrorMain main = new MirrorMain(args);
         main.run();
     }

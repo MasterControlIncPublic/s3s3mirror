@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.DigestException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,9 +36,9 @@ public class Sha256 {
      *  This is needed because when listing keys, the UserMetadata where the SHA-256 is stored is inaccessible. */
     public static final String CHECK_OBJECT_METADATA = "CHECK_OBJECT_METADATA";
 
-    private static MessageDigest md() throws NoSuchAlgorithmException { return MessageDigest.getInstance("SHA-256"); }
+    private static MessageDigest md() throws NoSuchAlgorithmException, NoSuchProviderException { return MessageDigest.getInstance("SHA-256", "BCFIPS"); }
 
-    public static MessageDigest getMessageDigest(InputStream input) throws NoSuchAlgorithmException, IOException, DigestException {
+    private static MessageDigest getMessageDigest(InputStream input) throws NoSuchAlgorithmException, IOException, NoSuchProviderException {
         final byte[] buf = new byte[4096];
         final MessageDigest md = md();
         while (true) {
@@ -47,14 +47,6 @@ public class Sha256 {
             md.update(buf, 0, read);
         }
         return md;
-    }
-    public static byte[] hash (byte[] data) {
-        if (data == null) throw new NullPointerException("sha256: null argument");
-        try {
-            return md().digest(data);
-        } catch (Exception e) {
-            throw new IllegalStateException("sha256: bad data: "+e, e);
-        }
     }
 
     public static String hash (File file) {
@@ -67,9 +59,9 @@ public class Sha256 {
         }
     }
 
-    public static String tohex(byte[] data) { return tohex(data, 0, data.length); }
+    private static String tohex(byte[] data) { return tohex(data, 0, data.length); }
 
-    public static String tohex(byte[] data, int start, int len) {
+    private static String tohex(byte[] data, int start, int len) {
         StringBuilder b = new StringBuilder();
         int stop = start+len;
         for (int i=start; i<stop; i++) {
@@ -77,7 +69,7 @@ public class Sha256 {
         }
         return b.toString();
     }
-    public static final String[] HEX_DIGITS = {"0", "1", "2", "3", "4", "5", "6", "7",
+    private static final String[] HEX_DIGITS = {"0", "1", "2", "3", "4", "5", "6", "7",
                                                "8", "9", "a", "b", "c", "d", "e", "f"};
 
     /**
@@ -87,8 +79,7 @@ public class Sha256 {
      * @param b the byte to process
      * @return a String representing the hexadecimal value of the byte
      */
-    public static String getHexValue(byte b) {
-        int i = (int) b;
-        return HEX_DIGITS[((i >> 4) + 16) % 16] + HEX_DIGITS[(i + 128) % 16];
+    private static String getHexValue(byte b) {
+        return HEX_DIGITS[(((int) b >> 4) + 16) % 16] + HEX_DIGITS[((int) b + 128) % 16];
     }
 }
